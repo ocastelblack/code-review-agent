@@ -9,3 +9,6 @@ agent = build_graph()
 def review(branch: str):
     result = agent.invoke({"branch": branch})
     print(result)
+
+if __name__ == "__main__":
+    app()

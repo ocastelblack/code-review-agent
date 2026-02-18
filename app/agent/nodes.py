@@ -22,12 +22,15 @@ def static_analysis(state):
     analyzer = AnalysisService()
     issues = []
 
-    for file in state["modified_files"]:
-        with open(file, "r") as f:
-            code = f.read()
-        issues.extend(analyzer.analyze_complexity(code))
+    git = GitService()
+    branch = state["branch"]
 
-    return {**state, "static_issues": issues}
+    for file in state["modified_files"]:
+        try:
+            code = git.get_file_content(branch, file)
+            issues.extend(analyzer.analyze_complexity(code))
+        except Exception:
+            continue
 
 def llm_review(state):
     llm = LLMService()
